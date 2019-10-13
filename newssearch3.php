@@ -32,30 +32,32 @@
 //	$nyt_array= json_decode($nyt_json,true);
 	 //nyt sports
 	$nytsp_url='https://api.nytimes.com/svc/topstories/v2/sports.json?api-key=bb2d5d16e7a446e59f0a11d0a6137a5f';
-	$nytsp_json=file_get_contents($nytsp_url);
+	@$nytsp_json=file_get_contents($nytsp_url);
 	$nytsp_array= json_decode($nytsp_json,true);
 	//nyt books
 	$nytbooks_url='https://api.nytimes.com/svc/topstories/v2/books.json?api-key=bb2d5d16e7a446e59f0a11d0a6137a5f';
-	$nytbooks_json=file_get_contents($nytbooks_url);
+	@$nytbooks_json=file_get_contents($nytbooks_url);
 	$nytbooks_array= json_decode($nytbooks_json,true);
 	
 	$nytworld_url='https://api.nytimes.com/svc/topstories/v2/world.json?api-key=bb2d5d16e7a446e59f0a11d0a6137a5f';
-	$nytworld_json=file_get_contents($nytworld_url);
+	@$nytworld_json=file_get_contents($nytworld_url);
 	$nytworld_array= json_decode($nytworld_json,true);
 	
 	$nytbu_url='https://api.nytimes.com/svc/topstories/v2/science.json?api-key=bb2d5d16e7a446e59f0a11d0a6137a5f';
-	$nytbu_json=file_get_contents($nytbu_url);
+	@$nytbu_json=file_get_contents($nytbu_url);
 	$nytbu_array= json_decode($nytbu_json,true);
 	
 	
-	$nyt_array=array_merge_recursive($nytworld_array,$nytsp_array,$nytbooks_array,$nytbu_array);
+	@$nyt_array=array_merge_recursive($nytworld_array,$nytsp_array,$nytbooks_array,$nytbu_array);
 	//make nyt like news api
 	$nyt_array['articles']=$nyt_array['results'];
+	if($nyt_array['articles']){
 	foreach($nyt_array['articles'] as $articles){
 		
 		$articles['description']=$articles['abstract'];
 		$articles['publishedAt']=$articles['published_date'];
 		
+	}
 	}
 	
 	//nyt categories array
@@ -96,10 +98,12 @@
 	}
 	
 	//nyt categories array
+	if($nyt_array['articles']){
 	foreach($nyt_array['articles'] as $articles){
 		$cat=strtolower($articles['section']);
 		if(!in_array($cat,$categories)){
 		array_push($categories,$cat);
+	}
 	}
 	}
 	
